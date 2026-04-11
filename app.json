@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "routewise",
-    "slug": "routewise",
+    "name": "RouteExplorer",
+    "slug": "RouteExplorer",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

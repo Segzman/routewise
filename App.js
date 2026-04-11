@@ -1,104 +1,63 @@
-// RouteWise - Main App Entry Point
-// Sets up React Navigation with Stack + Bottom Tabs
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 
-// Screens
 import HomeScreen from './screens/HomeScreen';
 import RouteBrowseScreen from './screens/RouteBrowseScreen';
 import RouteDetailsScreen from './screens/RouteDetailsScreen';
-import RouteMapScreen from './screens/RouteMapScreen';
-import UploadRouteScreen from './screens/UploadRouteScreen';
-import ShareRouteScreen from './screens/ShareRouteScreen';
+import FavoritesScreen from './screens/FavoritesScreen';
+import DownloadsScreen from './screens/DownloadsScreen';
 import ProfileScreen from './screens/ProfileScreen';
 
-const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-// Bottom Tab Navigator
-function TabNavigator() {
+function ExploreStack() {
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: '#fff',
-          borderTopColor: '#E0E0E0',
-          borderTopWidth: 1,
-          paddingBottom: 6,
-          paddingTop: 6,
-          height: 64,
-        },
-        tabBarActiveTintColor: '#4A90E2',
-        tabBarInactiveTintColor: '#aaa',
-        tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '600',
-          marginTop: 2,
-        },
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-          if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Explore') {
-            iconName = focused ? 'map' : 'map-outline';
-          } else if (route.name === 'Share') {
-            iconName = focused ? 'cloud-upload' : 'cloud-upload-outline';
-          } else if (route.name === 'Profile') {
-            iconName = focused ? 'person' : 'person-outline';
-          }
-          return <Ionicons name={iconName} size={22} color={color} />;
-        },
-      })}
-    >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Explore" component={RouteBrowseScreen} />
-      <Tab.Screen name="Share" component={UploadRouteScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
-    </Tab.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Browse" component={RouteBrowseScreen} />
+      <Stack.Screen name="RouteDetails" component={RouteDetailsScreen} />
+    </Stack.Navigator>
   );
 }
 
-// Main Stack Navigator
 export default function App() {
   return (
     <NavigationContainer>
-      <StatusBar style="dark" />
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {/* Main Tab Navigator as initial screen */}
-        <Stack.Screen name="MainTabs" component={TabNavigator} />
-
-        {/* Detail screens pushed on top of tabs */}
-        <Stack.Screen
-          name="RouteBrowse"
-          component={RouteBrowseScreen}
-          options={{ animation: 'slide_from_right' }}
-        />
-        <Stack.Screen
-          name="RouteDetails"
-          component={RouteDetailsScreen}
-          options={{ animation: 'slide_from_right' }}
-        />
-        <Stack.Screen
-          name="RouteMap"
-          component={RouteMapScreen}
-          options={{ animation: 'slide_from_bottom', presentation: 'fullScreenModal' }}
-        />
-        <Stack.Screen
-          name="UploadRoute"
-          component={UploadRouteScreen}
-          options={{ animation: 'slide_from_right' }}
-        />
-        <Stack.Screen
-          name="ShareRoute"
-          component={ShareRouteScreen}
-          options={{ animation: 'slide_from_right' }}
-        />
-      </Stack.Navigator>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarActiveTintColor: '#4A90E2',
+          tabBarInactiveTintColor: '#aaa',
+          tabBarStyle: {
+            backgroundColor: '#fff',
+            borderTopColor: '#F0F0F0',
+            height: 60,
+            paddingBottom: 8,
+          },
+          tabBarLabelStyle: {
+            fontSize: 11,
+            fontWeight: '600',
+          },
+          tabBarIcon: ({ focused, color, size }) => {
+            const icons = {
+              Explore: focused ? 'compass' : 'compass-outline',
+              Favorites: focused ? 'heart' : 'heart-outline',
+              Downloads: focused ? 'download' : 'download-outline',
+              Profile: focused ? 'person' : 'person-outline',
+            };
+            return <Ionicons name={icons[route.name]} size={size} color={color} />;
+          },
+        })}
+      >
+        <Tab.Screen name="Explore" component={ExploreStack} />
+        <Tab.Screen name="Favorites" component={FavoritesScreen} />
+        <Tab.Screen name="Downloads" component={DownloadsScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
