@@ -60,7 +60,7 @@ export default function HomeScreen({ navigation }) {
         {/* Explore Routes Card */}
         <TouchableOpacity
           style={[styles.actionCard, styles.exploreCard]}
-          onPress={() => navigation.navigate('RouteBrowse')}
+          onPress={() => navigation.navigate('Browse')}
           activeOpacity={0.9}
         >
           <View style={styles.cardIconWrapper}>
@@ -79,7 +79,7 @@ export default function HomeScreen({ navigation }) {
         {/* Share a Route Card */}
         <TouchableOpacity
           style={[styles.actionCard, styles.shareCard]}
-          onPress={() => navigation.navigate('UploadRoute')}
+          onPress={() => alert('Upload Route — coming soon!')}
           activeOpacity={0.9}
         >
           <View style={[styles.cardIconWrapper, styles.shareIconWrapper]}>
@@ -101,7 +101,7 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.sectionTitle}>Trending This Week</Text>
         <TouchableOpacity
           style={styles.trendingItem}
-          onPress={() => navigation.navigate('RouteBrowse')}
+          onPress={() => navigation.navigate('Browse')}
         >
           <View style={styles.trendingIcon}>
             <Ionicons name="trending-up" size={18} color="#E94B3C" />
@@ -114,7 +114,7 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.trendingItem}
-          onPress={() => navigation.navigate('RouteBrowse')}
+          onPress={() => navigation.navigate('Browse')}
         >
           <View style={[styles.trendingIcon, { backgroundColor: '#EBF9F1' }]}>
             <Ionicons name="flame" size={18} color="#50C878" />

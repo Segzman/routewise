@@ -1,0 +1,19 @@
+# PostgreSQL container for local development
+# Owner: Sekun
+
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    container_name: routewise_db
+    environment:
+      POSTGRES_USER: routewise_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: routewise_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
