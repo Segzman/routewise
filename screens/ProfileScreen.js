@@ -1,6 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+// FR3: Favourites & Profile — Owner: Aksheen
+
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { getProfile } from '../services/userApi';
 
 const menuItems = [
   { icon: 'person-outline', label: 'Edit Profile', color: '#4A90E2' },
@@ -11,6 +14,23 @@ const menuItems = [
 ];
 
 export default function ProfileScreen() {
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getProfile()
+      .then(setProfile)
+      .catch(() => setProfile({ name: 'Trail Explorer', email: 'explorer@routeapp.com', totalRoutes: 0, joinedDate: '2026-01-01' }))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}><Text style={styles.title}>My Profile</Text></View>
+      <ActivityIndicator style={{ marginTop: 40 }} size="large" color="#4A90E2" />
+    </SafeAreaView>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -20,14 +40,14 @@ export default function ProfileScreen() {
         <View style={styles.avatar}>
           <Ionicons name="person" size={44} color="#fff" />
         </View>
-        <Text style={styles.name}>Trail Explorer</Text>
-        <Text style={styles.email}>explorer@routeapp.com</Text>
+        <Text style={styles.name}>{profile?.name ?? 'Trail Explorer'}</Text>
+        <Text style={styles.email}>{profile?.email ?? ''}</Text>
         <View style={styles.statsRow}>
-          <View style={styles.stat}><Text style={styles.statNum}>12</Text><Text style={styles.statLabel}>Hikes</Text></View>
+          <View style={styles.stat}><Text style={styles.statNum}>{profile?.totalRoutes ?? 0}</Text><Text style={styles.statLabel}>Hikes</Text></View>
           <View style={styles.statDivider} />
-          <View style={styles.stat}><Text style={styles.statNum}>5</Text><Text style={styles.statLabel}>Favorites</Text></View>
+          <View style={styles.stat}><Text style={styles.statNum}>0</Text><Text style={styles.statLabel}>Favorites</Text></View>
           <View style={styles.statDivider} />
-          <View style={styles.stat}><Text style={styles.statNum}>3</Text><Text style={styles.statLabel}>Downloads</Text></View>
+          <View style={styles.stat}><Text style={styles.statNum}>0</Text><Text style={styles.statLabel}>Downloads</Text></View>
         </View>
       </View>
       <View style={styles.menu}>
