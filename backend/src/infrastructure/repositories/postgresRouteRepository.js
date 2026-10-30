@@ -21,6 +21,7 @@ class PostgresRouteRepository extends RouteRepository {
       petFriendly:   row.pet_friendly,
       description:   row.description,
       imageUrl:      row.image_url,
+      coordinates:   row.coordinates ?? [],
       createdAt:     row.created_at,
       updatedAt:     row.updated_at,
     });
@@ -68,11 +69,12 @@ class PostgresRouteRepository extends RouteRepository {
     const { rows } = await pool.query(
       `INSERT INTO routes
         (name, difficulty, distance, estimated_time, elevation,
-         rating, review_count, surface, pet_friendly, description, image_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
+         rating, review_count, surface, pet_friendly, description, image_url, coordinates)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12::jsonb) RETURNING *`,
       [data.name, data.difficulty, data.distance, data.estimatedTime, data.elevation,
        data.rating || 0, data.reviewCount || 0, data.surface,
-       data.petFriendly || false, data.description, data.imageUrl]
+       data.petFriendly || false, data.description, data.imageUrl,
+       JSON.stringify(data.coordinates || [])]
     );
     return this._toEntity(rows[0]);
   }
@@ -81,10 +83,11 @@ class PostgresRouteRepository extends RouteRepository {
     const { rows } = await pool.query(
       `UPDATE routes SET
         name=$1, difficulty=$2, distance=$3, estimated_time=$4, elevation=$5,
-        rating=$6, surface=$7, pet_friendly=$8, description=$9, image_url=$10
-       WHERE id=$11 RETURNING *`,
+        rating=$6, surface=$7, pet_friendly=$8, description=$9, image_url=$10, coordinates=$11::jsonb
+       WHERE id=$12 RETURNING *`,
       [data.name, data.difficulty, data.distance, data.estimatedTime, data.elevation,
-       data.rating, data.surface, data.petFriendly, data.description, data.imageUrl, id]
+       data.rating, data.surface, data.petFriendly, data.description, data.imageUrl,
+       JSON.stringify(data.coordinates || []), id]
     );
     return this._toEntity(rows[0]);
   }

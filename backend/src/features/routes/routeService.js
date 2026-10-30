@@ -15,12 +15,21 @@ async function getRouteById(id) {
 }
 
 async function createRoute(data) {
-  return repo.create(data);
+  if (!Array.isArray(data.coordinates) || data.coordinates.length < 2)
+    throw new Error('Route coordinates are required (start and end point)');
+  return repo.create({
+    ...data,
+    distance:      data.distance      ?? 0,  // unmeasured until reassessed
+    estimatedTime: data.estimatedTime || 'Not specified',
+    elevation:     data.elevation     ?? 0,
+    surface:       data.surface       || 'Mixed',
+    petFriendly:   data.petFriendly   ?? false,
+  });
 }
 
 async function updateRoute(id, data) {
-  await getRouteById(id); // throws 404 if missing
-  return repo.update(id, data);
+  const route = await getRouteById(id); // throws 404 if missing
+  return repo.update(id, { ...data, coordinates: data.coordinates ?? route.coordinates });
 }
 
 async function deleteRoute(id) {

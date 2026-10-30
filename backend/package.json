@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "db:migrate": "psql $DATABASE_URL -f src/infrastructure/database/migrations/001_create_routes_table.sql && psql $DATABASE_URL -f src/infrastructure/database/migrations/002_create_user_tables.sql",
+    "db:migrate": "psql $DATABASE_URL -f src/infrastructure/database/migrations/001_create_routes_table.sql && psql $DATABASE_URL -f src/infrastructure/database/migrations/002_create_user_tables.sql && psql $DATABASE_URL -f src/infrastructure/database/migrations/003_add_route_coordinates.sql",
     "db:seed": "psql $DATABASE_URL -f src/infrastructure/database/seeds/routes_seed.sql"
   },
   "dependencies": {

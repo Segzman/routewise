@@ -7,7 +7,7 @@ const VALID_SURFACES = ['Gravel', 'Paved', 'Rocky', 'Dirt', 'Mixed'];
 class Route {
   constructor({ id, name, difficulty, distance, estimatedTime, elevation,
     rating, reviewCount, surface, petFriendly, description, imageUrl,
-    createdAt, updatedAt }) {
+    coordinates, createdAt, updatedAt }) {
     this.id = id;
     this.name = name;
     this.difficulty = difficulty;
@@ -20,6 +20,7 @@ class Route {
     this.petFriendly = petFriendly;
     this.description = description;
     this.imageUrl = imageUrl;
+    this.coordinates = coordinates ?? [];
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this._validate();
@@ -29,10 +30,23 @@ class Route {
     if (!this.name || !this.name.trim()) throw new Error('Route name is required');
     if (!VALID_DIFFICULTIES.includes(this.difficulty))
       throw new Error(`Difficulty must be one of: ${VALID_DIFFICULTIES.join(', ')}`);
-    if (this.distance <= 0) throw new Error('Distance must be positive');
+    if (this.distance == null || this.distance < 0) throw new Error('Distance must be a non-negative number');
     if (this.rating < 0 || this.rating > 5) throw new Error('Rating must be between 0 and 5');
     if (!VALID_SURFACES.includes(this.surface))
       throw new Error(`Surface must be one of: ${VALID_SURFACES.join(', ')}`);
+    this._validateCoordinates(this.coordinates);
+  }
+
+  _validateCoordinates(coords) {
+    if (coords.length === 0) return; // legacy rows may have no coordinates yet
+    if (coords.length < 2)
+      throw new Error('Coordinates must contain at least 2 {lat, lng} points');
+    for (const point of coords) {
+      const { lat, lng } = point || {};
+      if (typeof lat !== 'number' || typeof lng !== 'number' ||
+          lat < -90 || lat > 90 || lng < -180 || lng > 180)
+        throw new Error('Invalid coordinates: each point needs numeric lat (-90..90) and lng (-180..180)');
+    }
   }
 
   isBeginnerFriendly() {
@@ -57,6 +71,7 @@ class Route {
       petFriendly: this.petFriendly,
       description: this.description,
       imageUrl: this.imageUrl,
+      coordinates: this.coordinates,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };
