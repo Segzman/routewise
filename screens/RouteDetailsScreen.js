@@ -4,12 +4,13 @@
 import React, { useState, useEffect } from 'react';
 import {
   View, Text, ScrollView, Image,
-  StyleSheet, ActivityIndicator, TouchableOpacity,
+  StyleSheet, ActivityIndicator, TouchableOpacity, Share,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { getRouteById } from '../services/routeApi';
 import { addFavourite, removeFavourite, getFavourites } from '../services/userApi';
+import RouteMap from '../components/RouteMap';
 
 const DIFF = {
   Easy:     { bg: '#E8F5E9', fg: '#2E7D32' },
@@ -55,6 +56,14 @@ export default function RouteDetailsScreen({ route: navRoute, navigation }) {
     }
   }
 
+  function shareRoute() {
+    // placeholder public URL until a real deployment exists (see README)
+    const link = `https://routewise.app/routes/${route.id}`;
+    Share.share({
+      message: `${route.name} — check out this route on RouteWise: ${link}`,
+    });
+  }
+
   if (loading) return (
     <View style={s.centered}>
       <ActivityIndicator size="large" color="#4A90E2" />
@@ -93,6 +102,12 @@ export default function RouteDetailsScreen({ route: navRoute, navigation }) {
             color={saved ? '#E94B3C' : '#fff'}
           />
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[s.shareBtn, { top: insets.top + 8 }]}
+          onPress={shareRoute}
+        >
+          <Ionicons name="share-social-outline" size={22} color="#fff" />
+        </TouchableOpacity>
       </View>
       <View style={s.body}>
         <Text style={s.name}>{route.name}</Text>
@@ -125,6 +140,13 @@ export default function RouteDetailsScreen({ route: navRoute, navigation }) {
 
         <Text style={s.sectionTitle}>Surface</Text>
         <Text style={s.meta}>{route.surface}</Text>
+
+        {route.coordinates?.length > 1 && (
+          <>
+            <Text style={s.sectionTitle}>Map</Text>
+            <RouteMap coordinates={route.coordinates} />
+          </>
+        )}
       </View>
     </ScrollView>
   );
@@ -149,6 +171,7 @@ const s = StyleSheet.create({
   hero:        { width: '100%', height: 280 },
   backBtn:     { position: 'absolute', left: 14, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(0,0,0,0.40)', alignItems: 'center', justifyContent: 'center' },
   favBtn:      { position: 'absolute', right: 14, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(0,0,0,0.40)', alignItems: 'center', justifyContent: 'center' },
+  shareBtn:    { position: 'absolute', right: 62, width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(0,0,0,0.40)', alignItems: 'center', justifyContent: 'center' },
   body:        { padding: 20 },
   name:        { fontSize: 22, fontWeight: 'bold', color: '#111', marginBottom: 12 },
   badgeRow:    { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
