@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from './screens/HomeScreen';
 import RouteBrowseScreen from './screens/RouteBrowseScreen';
 import RouteDetailsScreen from './screens/RouteDetailsScreen';
+import ShareScreen from './screens/ShareScreen';
 import FavoritesScreen from './screens/FavoritesScreen';
 import DownloadsScreen from './screens/DownloadsScreen';
 import ProfileScreen from './screens/ProfileScreen';
@@ -20,6 +21,7 @@ function ExploreStack() {
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="Browse" component={RouteBrowseScreen} />
       <Stack.Screen name="RouteDetails" component={RouteDetailsScreen} />
+      <Stack.Screen name="ShareRoute" component={ShareScreen} />
     </Stack.Navigator>
   );
 }

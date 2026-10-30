@@ -79,7 +79,7 @@ export default function HomeScreen({ navigation }) {
         {/* Share a Route Card */}
         <TouchableOpacity
           style={[styles.actionCard, styles.shareCard]}
-          onPress={() => alert('Upload Route — coming soon!')}
+          onPress={() => navigation.navigate('ShareRoute')}
           activeOpacity={0.9}
         >
           <View style={[styles.cardIconWrapper, styles.shareIconWrapper]}>
